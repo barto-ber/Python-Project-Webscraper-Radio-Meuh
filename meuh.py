@@ -16,6 +16,7 @@ def get_tracks():
     soup = BeautifulSoup(html_text, 'xml')
 
     data = []
+    emptylist = ()
 
     for string in soup.stripped_strings:
         data.append(repr(string))
