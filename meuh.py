@@ -11,8 +11,8 @@ from collections import defaultdict
 def get_tracks():
     today_get = date.today()
     today = today_get.strftime("%d/%m/%Y")
-    vgm_url = 'http://www.radiomeuh.com/rtdata/tracks10.xml'
-    html_text = requests.get(vgm_url).text
+    radio_url = 'http://www.radiomeuh.com/rtdata/tracks10.xml'
+    html_text = requests.get(radio_url).text
     soup = BeautifulSoup(html_text, 'xml')
 
     data = []
@@ -28,17 +28,22 @@ def get_tracks():
     # Deleting current song which is not complete.
     del data[0:3]
 
+    print(data)
     print(type(data[0]))
     print(data[0])
     tracksdict = {}
     iterdata = iter(data)
 
     for i in iterdata:
-        if (re.search('\D\d\d\D\d\d\D\d\d\D', str(i))): #or ("..." in str(o)):
+        if (re.search(r'\D\d{2}\D\d{2}\D\d{2}\D', str(i))): #or ("..." in str(o)):
             tracksdict[today+"_"+i] = [next(iterdata,""), next(iterdata,"")]
 
-
     print(tracksdict)
+
+    # Creating a dataframe from tracksdict{}
+    df = pd.DataFrame.from_dict(data=tracksdict, orient='index', columns=['Song', 'Album'])
+    print(df)
+
     #for key, value in tracksdict.items():
     #    print(key, '->', value)
 
