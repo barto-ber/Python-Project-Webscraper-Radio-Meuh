@@ -14,6 +14,7 @@ def get_tracks():
     radio_url = 'http://www.radiomeuh.com/rtdata/tracks10.xml'
     html_text = requests.get(radio_url).text
     soup = BeautifulSoup(html_text, 'xml')
+    print(soup)
 
     data = []
 

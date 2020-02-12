@@ -20,7 +20,7 @@ class Song:
 
     def __str__(self):
         """ This function tells python what to print when you do print(song)"""
-        return f"Song {self.name}. Album {self.album}. Last aired {self.last_aired}"
+        return f"Song {self.name}. Album {self.album}. Author {self.author}. Last aired {self.last_aired}"
 
 
 def simple_get(url):
