@@ -7,6 +7,7 @@ import time
 from datetime import date
 from collections import defaultdict
 import threading
+from threading import Thread
 
 
 
@@ -73,26 +74,50 @@ def build_archive():
 
 def build_csv():
     # Getting the dictionary from build_archive(), naming it differently to be able to clear the 'real' one later
-    archive_for_csv = build_archive()
-
-    def append_csv():
-        minutes = 60.0
+    while True:
+        archive_for_csv = build_archive()
+        minutes = 5
         time.sleep(60 * minutes)
-        # If it's that time of the day, run the script => basic paste to CSV.
-        # The parameter 'a' in open(csv) allows to 'append' to csv, not 'write' the file from scratch everytime
+        return archive_for_csv
+
+def append_csv():
+    while True:
+        minutes = 10
+        time.sleep(60 * minutes)
+        append_archive = build_csv()
         csv_file = 'tracks.csv'
         with open(csv_file, 'a',  newline='\n', encoding='utf-8') as f:
-            for key in archive_for_csv.keys():
-                f.write("%s, %s\n" % (key, archive_for_csv[key]))
+            for key in append_archive.keys():
+                f.write("%s, %s\n" % (key, append_archive[key]))
         print(" --- Copying to CSV! --- ")
         print("Copied Archive to CSV")
-        # Clearing the 'real' archive, so it doesn't get too heavy.
         print(" --- Emptying the archive and starting again! --- ")
         return archive.clear()
-    thread_append_csv = threading.Thread(target=append_csv)
-    thread_append_csv.start()
 
-wait_minutes = 20.0
-while True:
-    build_csv()
-    time.sleep(60*wait_minutes)
+if __name__ == "__main__":
+    t1 = Thread(target = build_csv)
+    t2 = Thread(target = append_csv)
+    t1.setDaemon(True)
+    t2.setDaemon(True)
+    t1.start()
+    t2.start()
+    while True:
+        pass
+
+
+
+
+
+
+
+
+
+# minutes = 15.0
+# time.sleep(60 * minutes)
+# thread_append_csv = threading.Thread(target=append_csv)
+# thread_append_csv.start()
+#
+# wait_minutes = 10.0
+# while True:
+#     build_csv()
+#     time.sleep(60*wait_minutes)
